@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics;
+using System.Text.Json;
 
 namespace Project_1
 {
@@ -15,13 +16,14 @@ namespace Project_1
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 encryptFileTextbox.Text = ofd.FileName;
-                metadataTextbox.Text = ofd.FileName + ".metadata";
                 if (encryptFileTextbox.Text.EndsWith(".enc"))
                 {
+                    metadataTextbox.Text = encryptFileTextbox.Text.Substring(0, encryptFileTextbox.Text.Length - 4) + ".metadata";
                     decryptFileTextbox.Text = encryptFileTextbox.Text.Substring(0, encryptFileTextbox.Text.Length - 4);
                 }
                 else
                 {
+                    metadataTextbox.Text = ofd.FileName + ".metadata";
                     decryptFileTextbox.Text = ofd.FileName + ".dec";
                 }
             }
@@ -88,6 +90,16 @@ namespace Project_1
                 CryptoModule.DecryptFileAES(filePath, decryptFileTextbox.Text, key);
 
                 MessageBox.Show("Giải mã thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (File.Exists(decryptFileTextbox.Text))
+                {
+                    ProcessStartInfo startInfo = new ProcessStartInfo
+                    {
+                        Arguments = Path.GetDirectoryName(decryptFileTextbox.Text),
+                        FileName = "explorer.exe"
+                    };
+
+                    Process.Start(startInfo);
+                }
 
             }
             catch (Exception ex)
