@@ -94,7 +94,7 @@ namespace Project_1
                 {
                     ProcessStartInfo startInfo = new ProcessStartInfo
                     {
-                        Arguments = Path.GetDirectoryName(decryptFileTextbox.Text),
+                        Arguments = "/select," + decryptFileTextbox.Text,
                         FileName = "explorer.exe"
                     };
 

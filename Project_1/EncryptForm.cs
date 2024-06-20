@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics;
+using System.Text.Json;
 
 namespace Project_1
 {
@@ -58,6 +59,17 @@ namespace Project_1
                     }
                 }
                 File.WriteAllText(metaFileTextbox.Text, JsonSerializer.Serialize(keyMeta));
+                if (File.Exists(encryptFileTextbox.Text))
+                {
+                    MessageBox.Show("Mã hóa thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    ProcessStartInfo startInfo = new ProcessStartInfo
+                    {
+                        Arguments = "/select," + encryptFileTextbox.Text,
+                        FileName = "explorer.exe"
+                    };
+
+                    Process.Start(startInfo);
+                }
 
             }
             catch (Exception ex)
