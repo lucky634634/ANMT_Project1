@@ -63,7 +63,7 @@
             // 
             // encryptButton
             // 
-            encryptButton.Location = new Point(713, 159);
+            encryptButton.Location = new Point(713, 415);
             encryptButton.Name = "encryptButton";
             encryptButton.Size = new Size(75, 23);
             encryptButton.TabIndex = 3;
@@ -83,7 +83,7 @@
             // 
             // saveKeyButton
             // 
-            saveKeyButton.Location = new Point(713, 188);
+            saveKeyButton.Location = new Point(713, 159);
             saveKeyButton.Name = "saveKeyButton";
             saveKeyButton.Size = new Size(75, 23);
             saveKeyButton.TabIndex = 5;

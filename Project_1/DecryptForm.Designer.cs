@@ -123,7 +123,7 @@
             // 
             // decryptButton
             // 
-            decryptButton.Location = new Point(713, 159);
+            decryptButton.Location = new Point(713, 415);
             decryptButton.Name = "decryptButton";
             decryptButton.Size = new Size(75, 23);
             decryptButton.TabIndex = 7;
@@ -151,7 +151,7 @@
             // 
             // keyFileButton
             // 
-            keyFileButton.Location = new Point(713, 188);
+            keyFileButton.Location = new Point(713, 159);
             keyFileButton.Name = "keyFileButton";
             keyFileButton.Size = new Size(75, 23);
             keyFileButton.TabIndex = 9;
