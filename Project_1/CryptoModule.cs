@@ -19,73 +19,61 @@ namespace Project_1
         // 2. Encrypt File Using AES
         public static void EncryptFileAES(string inputFile, string outputFile, string key)
         {
-            byte[] iv;
-            byte[] encrypted;
-
-            using (Aes aes = Aes.Create())
+            using (var aes = Aes.Create())
             {
                 aes.Key = Convert.FromBase64String(key);
                 aes.GenerateIV();
-                iv = aes.IV;
-                var encryptor = aes.CreateEncryptor(Convert.FromBase64String(key), iv);
-                using (var msEncrypt = new MemoryStream())
+                aes.Padding = PaddingMode.PKCS7;
+
+                using (var fs = new FileStream(outputFile, FileMode.Create, FileAccess.Write))
                 {
-                    using (var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
-                    using (var fs = new FileStream(inputFile, FileMode.Open, FileAccess.Read))
+                    fs.Write(aes.IV, 0, aes.IV.Length);
+                    var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+
+                    using (var csEncrypt = new CryptoStream(fs, encryptor, CryptoStreamMode.Write))
                     {
-                        fs.CopyTo(csEncrypt);
-                        fs.Close();
+                        using (var fsInput = new FileStream(inputFile, FileMode.Open, FileAccess.Read))
+                        {
+                            byte[] buffer = new byte[1048576]; // 1MB buffer
+                            int read;
+
+                            while ((read = fsInput.Read(buffer, 0, buffer.Length)) > 0)
+                            {
+                                csEncrypt.Write(buffer, 0, read);
+                            }
+                        }
                     }
-
-                    encrypted = msEncrypt.ToArray();
                 }
-            }
-
-            using (var fs = new FileStream(outputFile, FileMode.Create, FileAccess.Write))
-            {
-                fs.Write(iv, 0, iv.Length);
-                fs.Write(encrypted, 0, encrypted.Length);
-                fs.Close();
             }
         }
 
         // 3. Decrypt File Using AES
         public static void DecryptFileAES(string inputFile, string outputFile, string key)
         {
-            byte[] iv = new byte[16];
-            byte[] encrypted;
-            byte[] decrypted;
-            using (var fs = new FileStream(inputFile, FileMode.Open, FileAccess.Read))
-            {
-                fs.Read(iv, 0, iv.Length);
-                using (var ms = new MemoryStream())
-                {
-                    fs.CopyTo(ms);
-                    encrypted = ms.ToArray();
-                }
-                fs.Close();
-            }
-
-            using (Aes aes = Aes.Create())
+            using (var aes = Aes.Create())
             {
                 aes.Key = Convert.FromBase64String(key);
-                aes.IV = iv;
-                var decryptor = aes.CreateDecryptor(Convert.FromBase64String(key), iv);
-                using (var msDecrypt = new MemoryStream(encrypted))
+                aes.Padding = PaddingMode.PKCS7;
+                using (var inputFileStream = new FileStream(inputFile, FileMode.Open))
                 {
-                    using (var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
-                    using (var ms = new MemoryStream())
+                    byte[] iv = new byte[16];
+                    inputFileStream.Read(iv, 0, iv.Length);
+                    aes.IV = iv;
+
+                    var decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+
+                    using (var csDecrypt = new CryptoStream(inputFileStream, decryptor, CryptoStreamMode.Read))
+                    using (var outputFileStream = new FileStream(outputFile, FileMode.Create))
                     {
-                        csDecrypt.CopyTo(ms);
-                        decrypted = ms.ToArray();
+                        byte[] buffer = new byte[1048576]; // 1MB buffer
+                        int read;
+
+                        while ((read = csDecrypt.Read(buffer, 0, buffer.Length)) > 0)
+                        {
+                            outputFileStream.Write(buffer, 0, read);
+                        }
                     }
                 }
-            }
-
-            using (var fs = new FileStream(outputFile, FileMode.Create, FileAccess.Write))
-            {
-                fs.Write(decrypted, 0, decrypted.Length);
-                fs.Close();
             }
         }
 

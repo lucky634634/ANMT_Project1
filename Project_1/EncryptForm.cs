@@ -32,7 +32,7 @@ namespace Project_1
                 string filePath = sourceTextbox.Text;
 
                 string key = CryptoModule.GenerateAESKey();
-                if (string.IsNullOrWhiteSpace(encryptFileTextbox.Text) || !File.Exists(encryptFileTextbox.Text))
+                if (string.IsNullOrWhiteSpace(encryptFileTextbox.Text))
                 {
                     var sfd = new SaveFileDialog();
                     if (sfd.ShowDialog() == DialogResult.OK)
@@ -50,7 +50,7 @@ namespace Project_1
                 privateKeyTextbox.Text = privateKey;
                 KeyMeta keyMeta = new KeyMeta(CryptoModule.EncryptStringRSA(key, publicKey), CryptoModule.HashValue(privateKey, "SHA-1"));
 
-                if (string.IsNullOrWhiteSpace(metaFileTextbox.Text) || !File.Exists(metaFileTextbox.Text))
+                if (string.IsNullOrWhiteSpace(metaFileTextbox.Text))
                 {
                     var sfd = new SaveFileDialog();
                     if (sfd.ShowDialog() == DialogResult.OK)

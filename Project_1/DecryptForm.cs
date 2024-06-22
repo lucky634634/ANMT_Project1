@@ -89,9 +89,9 @@ namespace Project_1
                 string key = CryptoModule.DecryptStringRSA(keyMeta.key, privateKey);
                 CryptoModule.DecryptFileAES(filePath, decryptFileTextbox.Text, key);
 
-                MessageBox.Show("Giải mã thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 if (File.Exists(decryptFileTextbox.Text))
                 {
+                    MessageBox.Show("Giải mã thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     ProcessStartInfo startInfo = new ProcessStartInfo
                     {
                         Arguments = "/select," + decryptFileTextbox.Text,
